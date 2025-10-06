@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import colors from '../../constants/colors';
+import colors, { typography, spacing, borderRadius } from '../../constants/colors';
+import { mockProperties } from '../../services/mockData';
 
 const PropertiesScreen = ({ navigation }) => {
   const [properties, setProperties] = useState([]);
@@ -20,42 +21,6 @@ const PropertiesScreen = ({ navigation }) => {
   }, []);
 
   const loadProperties = () => {
-    // Simulate API call
-    const mockProperties = [
-      {
-        id: 1,
-        name: 'Cozy Downtown Hostel',
-        location: 'Mumbai, Maharashtra',
-        totalRooms: 25,
-        occupiedRooms: 18,
-        rating: 4.5,
-        price: 800,
-        status: 'active',
-        image: 'https://via.placeholder.com/300x200?text=Hostel+1',
-      },
-      {
-        id: 2,
-        name: 'Beach Side Hostel',
-        location: 'Goa, India',
-        totalRooms: 15,
-        occupiedRooms: 12,
-        rating: 4.2,
-        price: 600,
-        status: 'active',
-        image: 'https://via.placeholder.com/300x200?text=Hostel+2',
-      },
-      {
-        id: 3,
-        name: 'Mountain View Lodge',
-        location: 'Manali, Himachal Pradesh',
-        totalRooms: 20,
-        occupiedRooms: 8,
-        rating: 4.8,
-        price: 1200,
-        status: 'inactive',
-        image: 'https://via.placeholder.com/300x200?text=Hostel+3',
-      },
-    ];
     setProperties(mockProperties);
   };
 
@@ -68,16 +33,9 @@ const PropertiesScreen = ({ navigation }) => {
       <View style={styles.propertyInfo}>
         <View style={styles.propertyHeader}>
           <Text style={styles.propertyName}>{property.name}</Text>
-          <View style={[
-            styles.statusBadge,
-            { backgroundColor: property.status === 'active' ? colors.success : colors.gray300 }
-          ]}>
-            <Text style={[
-              styles.statusText,
-              { color: property.status === 'active' ? colors.white : colors.textSecondary }
-            ]}>
-              {property.status.toUpperCase()}
-            </Text>
+          <View style={styles.ratingContainer}>
+            <Ionicons name="star" size={14} color={colors.warning} />
+            <Text style={styles.rating}>{property.rating}</Text>
           </View>
         </View>
         
@@ -89,18 +47,15 @@ const PropertiesScreen = ({ navigation }) => {
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
             <Text style={styles.statValue}>{property.occupiedRooms}/{property.totalRooms}</Text>
-            <Text style={styles.statLabel}>Rooms Occupied</Text>
+            <Text style={styles.statLabel}>Rooms</Text>
           </View>
           <View style={styles.statItem}>
-            <View style={styles.ratingContainer}>
-              <Ionicons name="star" size={16} color={colors.warning} />
-              <Text style={styles.rating}>{property.rating}</Text>
-            </View>
-            <Text style={styles.statLabel}>Rating</Text>
+            <Text style={styles.statValue}>{property.occupiedBeds}/{property.totalBeds}</Text>
+            <Text style={styles.statLabel}>Beds</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>₹{property.price}</Text>
-            <Text style={styles.statLabel}>Per Night</Text>
+            <Text style={styles.statValue}>₹{(property.monthlyRevenue / 1000).toFixed(0)}K</Text>
+            <Text style={styles.statLabel}>Revenue</Text>
           </View>
         </View>
 
@@ -137,15 +92,9 @@ const PropertiesScreen = ({ navigation }) => {
         </View>
         <View style={styles.summaryCard}>
           <Text style={styles.summaryValue}>
-            {properties.filter(p => p.status === 'active').length}
+            {properties.reduce((sum, p) => sum + p.occupiedRooms, 0)}
           </Text>
-          <Text style={styles.summaryLabel}>Active</Text>
-        </View>
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryValue}>
-            {properties.reduce((total, p) => total + p.occupiedRooms, 0)}
-          </Text>
-          <Text style={styles.summaryLabel}>Occupied Rooms</Text>
+          <Text style={styles.summaryLabel}>Active Rooms</Text>
         </View>
       </View>
 

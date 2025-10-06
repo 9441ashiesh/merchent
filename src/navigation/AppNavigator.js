@@ -22,6 +22,8 @@ import DashboardScreen from '../screens/dashboard/DashboardScreen';
 import PropertiesScreen from '../screens/properties/PropertiesScreen';
 import PropertyDetailScreen from '../screens/properties/PropertyDetailScreen';
 import AddPropertyScreen from '../screens/properties/AddPropertyScreen';
+import RoomDetailScreen from '../screens/rooms/RoomDetailScreen';
+import StudentProfileScreen from '../screens/members/StudentProfileScreen';
 import BookingsScreen from '../screens/bookings/BookingsScreen';
 import BookingDetailScreen from '../screens/bookings/BookingDetailScreen';
 import AnalyticsScreen from '../screens/analytics/AnalyticsScreen';
@@ -62,6 +64,8 @@ const PropertiesStack = () => (
   >
     <Stack.Screen name="PropertiesList" component={PropertiesScreen} />
     <Stack.Screen name="PropertyDetail" component={PropertyDetailScreen} />
+    <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
+    <Stack.Screen name="StudentProfile" component={StudentProfileScreen} />
     <Stack.Screen name="AddProperty" component={AddPropertyScreen} />
   </Stack.Navigator>
 );

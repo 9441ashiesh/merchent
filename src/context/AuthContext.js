@@ -33,35 +33,41 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      // Direct login based on phone number only
+      // Phone-based authentication as per specification
+      // Phone number '8' = Merchant, Phone number '9' = Admin
       
-      // Check user type based on phone number
       const isAdmin = credentials.phone === '9';
       const isMerchant = credentials.phone === '8';
+      
+      if (!isAdmin && !isMerchant) {
+        return { 
+          success: false, 
+          error: 'Invalid phone number. Use 8 for merchant or 9 for admin access.' 
+        };
+      }
       
       const userData = isAdmin ? {
         id: 1,
         name: 'Admin User',
         phone: credentials.phone,
-        role: 'admin'
-      } : isMerchant ? {
+        email: 'admin@hostel.com',
+        role: 'admin',
+        permissions: ['view_all', 'manage_users', 'manage_properties', 'view_analytics', 'system_settings']
+      } : {
         id: 2,
         name: 'John Doe',
         phone: credentials.phone,
+        email: 'merchant@hostel.com',
         businessName: 'Cozy Hostel',
-        role: 'merchant'
-      } : {
-        id: 3,
-        name: 'Regular User',
-        phone: credentials.phone,
-        role: 'user'
+        role: 'merchant',
+        permissions: ['manage_rooms', 'manage_members', 'manage_payments', 'view_reports']
       };
       
       setUser(userData);
       setIsAuthenticated(true);
       
-      // In a real app, store auth token in secure storage
-      return { success: true };
+      // In a real app, store auth token in AsyncStorage
+      return { success: true, user: userData };
     } catch (error) {
       console.error('Login failed:', error);
       return { success: false, error: error.message };

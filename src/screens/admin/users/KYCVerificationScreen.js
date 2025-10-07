@@ -673,7 +673,7 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 80,
     left: 0,
     right: 0,
     flexDirection: 'row',

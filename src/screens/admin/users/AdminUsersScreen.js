@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   Alert,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,34 +27,84 @@ const AdminUsersScreen = ({ navigation }) => {
     const mockUsers = [
       {
         id: 1,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '+1234567890',
-        role: 'user',
+        name: 'Rajesh Kumar',
+        email: 'rajesh@example.com',
+        phone: '+91 98765 43210',
+        role: 'merchant',
         status: 'active',
         joinDate: '2024-01-15',
         lastActive: '2024-10-06',
+        avatar: 'https://i.pravatar.cc/150?img=12',
+        businessName: 'Sunshine Hostel',
+        propertyCount: 3,
+        totalRevenue: '₹2.5L',
+        kycStatus: 'Approved',
+        city: 'Mumbai',
       },
       {
         id: 2,
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        phone: '+1987654321',
+        name: 'Priya Sharma',
+        email: 'priya@example.com',
+        phone: '+91 98765 43211',
         role: 'merchant',
         status: 'active',
         joinDate: '2024-02-20',
         lastActive: '2024-10-05',
-        businessName: 'Cozy Hostel',
+        avatar: 'https://i.pravatar.cc/150?img=5',
+        businessName: 'Green Valley PG',
+        propertyCount: 2,
+        totalRevenue: '₹1.8L',
+        kycStatus: 'Pending',
+        city: 'Pune',
       },
       {
         id: 3,
-        name: 'Bob Wilson',
-        email: 'bob@example.com',
-        phone: '+1122334455',
-        role: 'user',
-        status: 'suspended',
+        name: 'Amit Patel',
+        email: 'amit@example.com',
+        phone: '+91 98765 43212',
+        role: 'merchant',
+        status: 'active',
         joinDate: '2024-03-10',
         lastActive: '2024-09-28',
+        avatar: 'https://i.pravatar.cc/150?img=13',
+        businessName: 'City Center Hostel',
+        propertyCount: 1,
+        totalRevenue: '₹95K',
+        kycStatus: 'Rejected',
+        city: 'Bangalore',
+      },
+      {
+        id: 4,
+        name: 'Sneha Reddy',
+        email: 'sneha@example.com',
+        phone: '+91 98765 43213',
+        role: 'user',
+        status: 'active',
+        joinDate: '2024-04-05',
+        lastActive: '2024-10-07',
+        avatar: 'https://i.pravatar.cc/150?img=9',
+      },
+      {
+        id: 5,
+        name: 'Vikram Singh',
+        email: 'vikram@example.com',
+        phone: '+91 98765 43214',
+        role: 'user',
+        status: 'active',
+        joinDate: '2024-05-12',
+        lastActive: '2024-10-06',
+        avatar: 'https://i.pravatar.cc/150?img=16',
+      },
+      {
+        id: 6,
+        name: 'Kavya Nair',
+        email: 'kavya@example.com',
+        phone: '+91 98765 43215',
+        role: 'user',
+        status: 'suspended',
+        joinDate: '2024-06-20',
+        lastActive: '2024-09-30',
+        avatar: 'https://i.pravatar.cc/150?img=10',
       },
     ];
     setUsers(mockUsers);
@@ -86,11 +137,7 @@ const AdminUsersScreen = ({ navigation }) => {
     <View style={styles.userCard}>
       <View style={styles.userHeader}>
         <View style={styles.userInfo}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user.name.split(' ').map(n => n[0]).join('')}
-            </Text>
-          </View>
+          <Image source={{ uri: user.avatar }} style={styles.avatar} />
           <View style={styles.userDetails}>
             <Text style={styles.userName}>{user.name}</Text>
             <Text style={styles.userEmail}>{user.email}</Text>
@@ -116,21 +163,64 @@ const AdminUsersScreen = ({ navigation }) => {
       </View>
       
       <View style={styles.userStats}>
-        <View style={styles.statItem}>
-          <Text style={styles.statLabel}>Joined</Text>
-          <Text style={styles.statValue}>{user.joinDate}</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statLabel}>Last Active</Text>
-          <Text style={styles.statValue}>{user.lastActive}</Text>
-        </View>
-        {user.businessName && (
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Business</Text>
-            <Text style={styles.statValue}>{user.businessName}</Text>
-          </View>
+        {user.role === 'merchant' ? (
+          <>
+            <View style={styles.statItemMerchant}>
+              <Ionicons name="business-outline" size={14} color={colors.primary} />
+              <View>
+                <Text style={styles.statLabel}>Business</Text>
+                <Text style={styles.statValue}>{user.businessName}</Text>
+              </View>
+            </View>
+            <View style={styles.statItemMerchant}>
+              <Ionicons name="home-outline" size={14} color={colors.success} />
+              <View>
+                <Text style={styles.statLabel}>Properties</Text>
+                <Text style={styles.statValue}>{user.propertyCount}</Text>
+              </View>
+            </View>
+            <View style={styles.statItemMerchant}>
+              <Ionicons name="cash-outline" size={14} color={colors.warning} />
+              <View>
+                <Text style={styles.statLabel}>Revenue</Text>
+                <Text style={styles.statValue}>{user.totalRevenue}</Text>
+              </View>
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.statItem}>
+              <Text style={styles.statLabel}>Joined</Text>
+              <Text style={styles.statValue}>{user.joinDate}</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statLabel}>Last Active</Text>
+              <Text style={styles.statValue}>{user.lastActive}</Text>
+            </View>
+          </>
         )}
       </View>
+      
+      {user.role === 'merchant' && (
+        <View style={styles.kycStatusContainer}>
+          <View style={styles.kycRow}>
+            <Ionicons 
+              name={user.kycStatus === 'Approved' ? 'checkmark-circle' : user.kycStatus === 'Pending' ? 'time' : 'close-circle'} 
+              size={16} 
+              color={user.kycStatus === 'Approved' ? colors.success : user.kycStatus === 'Pending' ? colors.warning : colors.error} 
+            />
+            <Text style={[styles.kycStatusText, {
+              color: user.kycStatus === 'Approved' ? colors.success : user.kycStatus === 'Pending' ? colors.warning : colors.error
+            }]}>
+              KYC: {user.kycStatus}
+            </Text>
+          </View>
+          <View style={styles.cityBadge}>
+            <Ionicons name="location" size={12} color={colors.textSecondary} />
+            <Text style={styles.cityText}>{user.city}</Text>
+          </View>
+        </View>
+      )}
 
       <View style={styles.userActions}>
         <TouchableOpacity 
@@ -373,18 +463,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     marginRight: 12,
-  },
-  avatarText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: 'bold',
+    backgroundColor: colors.gray200,
   },
   userDetails: {
     flex: 1,
@@ -438,6 +521,11 @@ const styles = StyleSheet.create({
   statItem: {
     alignItems: 'center',
   },
+  statItemMerchant: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   statLabel: {
     fontSize: 12,
     color: colors.textSecondary,
@@ -447,6 +535,34 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: colors.textPrimary,
+  },
+  kycStatusContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: colors.gray50,
+    borderRadius: 8,
+  },
+  kycRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  kycStatusText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  cityBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  cityText: {
+    fontSize: 12,
+    color: colors.textSecondary,
   },
   userActions: {
     flexDirection: 'row',

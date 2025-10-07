@@ -33,9 +33,9 @@ const mockProperties = [
     kycVerified: true,
     submittedDate: '2025-01-15',
     images: [
-      'https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Sunshine+Hostel',
-      'https://via.placeholder.com/400x300/2196F3/FFFFFF?text=Room+View',
-      'https://via.placeholder.com/400x300/FF9800/FFFFFF?text=Common+Area',
+      'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=600&fit=crop',
     ],
     amenities: ['WiFi', 'AC', 'Laundry', 'Mess', 'Security', 'Parking'],
     description: 'Premium hostel facility with all modern amenities',
@@ -59,8 +59,8 @@ const mockProperties = [
     kycVerified: true,
     submittedDate: '2025-01-10',
     images: [
-      'https://via.placeholder.com/400x300/9C27B0/FFFFFF?text=Green+Valley+PG',
-      'https://via.placeholder.com/400x300/E91E63/FFFFFF?text=Room+View',
+      'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
     ],
     amenities: ['WiFi', 'AC', 'Mess', '24/7 Security', 'CCTV'],
     description: 'Safe and secure accommodation for female students',
@@ -84,7 +84,7 @@ const mockProperties = [
     kycVerified: false,
     submittedDate: '2025-01-18',
     images: [
-      'https://via.placeholder.com/400x300/FF5722/FFFFFF?text=City+Center',
+      'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&h=600&fit=crop&sat=-50',
     ],
     amenities: ['WiFi', 'Gym', 'Laundry', 'Cafeteria'],
     description: 'Modern hostel in the heart of the city',
@@ -111,7 +111,11 @@ const AdminPropertiesScreen = ({ navigation }) => {
       style={styles.propertyCard}
       onPress={() => navigation.navigate('PropertyDetailAdmin', { property: item })}
     >
-      <Image source={{ uri: item.images[0] }} style={styles.propertyImage} />
+      <Image 
+        source={{ uri: item.images[0] }} 
+        style={styles.propertyImage}
+        resizeMode="cover"
+      />
       
       {/* Status Badge */}
       <View style={[styles.statusBadge, styles[`status${item.status}`]]}>

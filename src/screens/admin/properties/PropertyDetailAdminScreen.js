@@ -560,6 +560,7 @@ const styles = StyleSheet.create({
   },
   bottomActions: {
     padding: 20,
+    paddingBottom: 100,
     backgroundColor: colors.white,
     borderTopWidth: 1,
     borderTopColor: colors.gray200,

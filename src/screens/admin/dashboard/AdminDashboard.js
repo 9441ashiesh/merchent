@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -251,35 +252,128 @@ const AdminDashboard = ({ navigation }) => {
 
         {/* Recent Activity */}
         <View style={styles.recentActivity}>
-          <Text style={styles.sectionTitle}>Recent Activity</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Recent Properties</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Properties')}>
+              <Text style={styles.seeAllText}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.propertiesScroll}
+          >
+            <TouchableOpacity style={styles.propertyCard}>
+              <Image 
+                source={{ uri: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400' }} 
+                style={styles.propertyCardImage} 
+              />
+              <View style={styles.propertyCardOverlay}>
+                <Text style={styles.propertyCardName}>Sunshine Hostel</Text>
+                <View style={styles.propertyCardInfo}>
+                  <Ionicons name="location" size={12} color={colors.white} />
+                  <Text style={styles.propertyCardLocation}>Mumbai</Text>
+                </View>
+                <View style={styles.propertyStatusBadge}>
+                  <Text style={styles.propertyStatusText}>Pending</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.propertyCard}>
+              <Image 
+                source={{ uri: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400' }} 
+                style={styles.propertyCardImage} 
+              />
+              <View style={styles.propertyCardOverlay}>
+                <Text style={styles.propertyCardName}>Green Valley PG</Text>
+                <View style={styles.propertyCardInfo}>
+                  <Ionicons name="location" size={12} color={colors.white} />
+                  <Text style={styles.propertyCardLocation}>Pune</Text>
+                </View>
+                <View style={[styles.propertyStatusBadge, { backgroundColor: colors.success }]}>
+                  <Text style={styles.propertyStatusText}>Approved</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.propertyCard}>
+              <Image 
+                source={{ uri: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' }} 
+                style={styles.propertyCardImage} 
+              />
+              <View style={styles.propertyCardOverlay}>
+                <Text style={styles.propertyCardName}>City Center</Text>
+                <View style={styles.propertyCardInfo}>
+                  <Ionicons name="location" size={12} color={colors.white} />
+                  <Text style={styles.propertyCardLocation}>Bangalore</Text>
+                </View>
+                <View style={styles.propertyStatusBadge}>
+                  <Text style={styles.propertyStatusText}>Pending</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+
+        {/* Recent Merchants */}
+        <View style={styles.recentActivity}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Recent Merchants</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Users')}>
+              <Text style={styles.seeAllText}>See All</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.activityList}>
-            <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: colors.success }]}>
-                <Ionicons name="person-add" size={16} color={colors.white} />
-              </View>
+            <TouchableOpacity style={styles.activityItem}>
+              <Image 
+                source={{ uri: 'https://i.pravatar.cc/150?img=12' }} 
+                style={styles.merchantAvatar} 
+              />
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>New merchant registered</Text>
-                <Text style={styles.activityTime}>2 hours ago</Text>
+                <Text style={styles.activityTitle}>Rajesh Kumar</Text>
+                <View style={styles.merchantInfo}>
+                  <Ionicons name="business-outline" size={12} color={colors.textSecondary} />
+                  <Text style={styles.activityTime}>Sunshine Hostel • Mumbai</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: colors.warning }]}>
-                <Ionicons name="home" size={16} color={colors.white} />
+              <View style={styles.kycBadgeGreen}>
+                <Ionicons name="checkmark-circle" size={14} color={colors.success} />
+                <Text style={styles.kycBadgeText}>KYC</Text>
               </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.activityItem}>
+              <Image 
+                source={{ uri: 'https://i.pravatar.cc/150?img=5' }} 
+                style={styles.merchantAvatar} 
+              />
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>Property pending approval</Text>
-                <Text style={styles.activityTime}>4 hours ago</Text>
+                <Text style={styles.activityTitle}>Priya Sharma</Text>
+                <View style={styles.merchantInfo}>
+                  <Ionicons name="business-outline" size={12} color={colors.textSecondary} />
+                  <Text style={styles.activityTime}>Green Valley PG • Pune</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: colors.error }]}>
-                <Ionicons name="flag" size={16} color={colors.white} />
+              <View style={styles.kycBadgeYellow}>
+                <Ionicons name="time" size={14} color={colors.warning} />
+                <Text style={styles.kycBadgeText}>Pending</Text>
               </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.activityItem}>
+              <Image 
+                source={{ uri: 'https://i.pravatar.cc/150?img=13' }} 
+                style={styles.merchantAvatar} 
+              />
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>User reported an issue</Text>
-                <Text style={styles.activityTime}>6 hours ago</Text>
+                <Text style={styles.activityTitle}>Amit Patel</Text>
+                <View style={styles.merchantInfo}>
+                  <Ionicons name="business-outline" size={12} color={colors.textSecondary} />
+                  <Text style={styles.activityTime}>City Center • Bangalore</Text>
+                </View>
               </View>
-            </View>
+              <View style={styles.kycBadgeRed}>
+                <Ionicons name="close-circle" size={14} color={colors.error} />
+                <Text style={styles.kycBadgeText}>Rejected</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -477,6 +571,73 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 20,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  seeAllText: {
+    fontSize: 14,
+    color: colors.primary,
+    fontWeight: '600',
+  },
+  propertiesScroll: {
+    paddingRight: 20,
+  },
+  propertyCard: {
+    width: 220,
+    height: 150,
+    marginRight: 12,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: colors.white,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  propertyCardImage: {
+    width: '100%',
+    height: '100%',
+  },
+  propertyCardOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  propertyCardName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.white,
+    marginBottom: 4,
+  },
+  propertyCardInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginBottom: 6,
+  },
+  propertyCardLocation: {
+    fontSize: 12,
+    color: colors.white,
+  },
+  propertyStatusBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.warning,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  propertyStatusText: {
+    fontSize: 10,
+    color: colors.white,
+    fontWeight: '600',
+  },
   activityList: {
     backgroundColor: colors.white,
     borderRadius: 16,
@@ -494,6 +655,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.gray100,
   },
+  merchantAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    marginRight: 12,
+    backgroundColor: colors.gray200,
+  },
   activityIcon: {
     width: 32,
     height: 32,
@@ -509,11 +677,48 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.textPrimary,
+    marginBottom: 3,
+  },
+  merchantInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   activityTime: {
     fontSize: 12,
     color: colors.textSecondary,
-    marginTop: 2,
+  },
+  kycBadgeGreen: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.success + '15',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  kycBadgeYellow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.warning + '15',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  kycBadgeRed: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.error + '15',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  kycBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: colors.textPrimary,
   },
 });
 

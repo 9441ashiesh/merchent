@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { useAuth } from '../context/AuthContext';
 import colors from '../constants/colors';
+import CustomBottomTabBar from '../components/navigation/CustomBottomTabBar';
 
 // Auth Screens
 import LoginScreen from '../screens/auth/LoginScreen';
@@ -16,23 +17,27 @@ import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import AdminDashboard from '../screens/admin/dashboard/AdminDashboard';
 import AdminUsersScreen from '../screens/admin/users/AdminUsersScreen';
 import AdminPropertiesScreen from '../screens/admin/properties/AdminPropertiesScreen';
-import AdminBookingsScreen from '../screens/admin/bookings/AdminBookingsScreen';
 import AdminSettingsScreen from '../screens/admin/settings/AdminSettingsScreen';
-import DashboardScreen from '../screens/dashboard/DashboardScreen';
-import PropertiesScreen from '../screens/properties/PropertiesScreen';
-import PropertyDetailScreen from '../screens/properties/PropertyDetailScreen';
-import AddPropertyScreen from '../screens/properties/AddPropertyScreen';
-import RoomDetailScreen from '../screens/rooms/RoomDetailScreen';
-import AddRoomScreen from '../screens/rooms/AddRoomScreen';
-import StudentProfileScreen from '../screens/members/StudentProfileScreen';
-import AddMemberScreen from '../screens/members/AddMemberScreen';
-import MembersScreen from '../screens/members/MembersScreen';
-import BookingsScreen from '../screens/bookings/BookingsScreen';
-import BookingDetailScreen from '../screens/bookings/BookingDetailScreen';
-import AnalyticsScreen from '../screens/analytics/AnalyticsScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
-import EditProfileScreen from '../screens/profile/EditProfileScreen';
-import SettingsScreen from '../screens/profile/SettingsScreen';
+import PropertyApprovalScreen from '../screens/admin/properties/PropertyApprovalScreen';
+import PropertyDetailAdminScreen from '../screens/admin/properties/PropertyDetailAdminScreen';
+import KYCVerificationScreen from '../screens/admin/users/KYCVerificationScreen';
+
+// Merchant Screens
+import DashboardScreen from '../screens/merchant/dashboard/DashboardScreen';
+import PropertiesScreen from '../screens/merchant/properties/PropertiesScreen';
+import PropertyDetailScreen from '../screens/merchant/properties/PropertyDetailScreen';
+import AddPropertyScreen from '../screens/merchant/properties/AddPropertyScreen';
+import RoomDetailScreen from '../screens/merchant/rooms/RoomDetailScreen';
+import AddRoomScreen from '../screens/merchant/rooms/AddRoomScreen';
+import StudentProfileScreen from '../screens/merchant/members/StudentProfileScreen';
+import AddMemberScreen from '../screens/merchant/members/AddMemberScreen';
+import MembersScreen from '../screens/merchant/members/MembersScreen';
+import BookingsScreen from '../screens/merchant/bookings/BookingsScreen';
+import BookingDetailScreen from '../screens/merchant/bookings/BookingDetailScreen';
+import AnalyticsScreen from '../screens/merchant/analytics/AnalyticsScreen';
+import ProfileScreen from '../screens/merchant/profile/ProfileScreen';
+import EditProfileScreen from '../screens/merchant/profile/EditProfileScreen';
+import SettingsScreen from '../screens/merchant/profile/SettingsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -120,42 +125,35 @@ const ProfileStack = () => (
   </Stack.Navigator>
 );
 
+const AdminPropertiesStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="AdminPropertiesList" component={AdminPropertiesScreen} />
+    <Stack.Screen name="PropertyDetailAdmin" component={PropertyDetailAdminScreen} />
+    <Stack.Screen name="PropertyApproval" component={PropertyApprovalScreen} />
+  </Stack.Navigator>
+);
+
+const AdminUsersStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="AdminUsersList" component={AdminUsersScreen} />
+    <Stack.Screen name="KYCVerification" component={KYCVerificationScreen} />
+  </Stack.Navigator>
+);
+
 const AdminTabs = () => (
   <Tab.Navigator
-    screenOptions={({ route }) => ({
+    tabBar={props => <CustomBottomTabBar {...props} userRole="admin" />}
+    screenOptions={{
       headerShown: false,
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
-
-        if (route.name === 'AdminDashboard') {
-          iconName = focused ? 'analytics' : 'analytics-outline';
-        } else if (route.name === 'Users') {
-          iconName = focused ? 'people' : 'people-outline';
-        } else if (route.name === 'AdminProperties') {
-          iconName = focused ? 'business' : 'business-outline';
-        } else if (route.name === 'AdminBookings') {
-          iconName = focused ? 'calendar' : 'calendar-outline';
-        } else if (route.name === 'AdminSettings') {
-          iconName = focused ? 'settings' : 'settings-outline';
-        }
-
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: colors.gray400,
-      tabBarStyle: {
-        backgroundColor: colors.white,
-        borderTopColor: colors.gray200,
-        borderTopWidth: 1,
-        paddingTop: 5,
-        paddingBottom: 5,
-        height: 60,
-      },
-      tabBarLabelStyle: {
-        fontSize: 12,
-        fontWeight: '500',
-      },
-    })}
+    }}
   >
     <Tab.Screen 
       name="AdminDashboard" 
@@ -164,18 +162,13 @@ const AdminTabs = () => (
     />
     <Tab.Screen 
       name="Users" 
-      component={AdminUsersScreen}
+      component={AdminUsersStack}
       options={{ tabBarLabel: 'Users' }}
     />
     <Tab.Screen 
       name="AdminProperties" 
-      component={AdminPropertiesScreen}
+      component={AdminPropertiesStack}
       options={{ tabBarLabel: 'Properties' }}
-    />
-    <Tab.Screen 
-      name="AdminBookings" 
-      component={AdminBookingsScreen}
-      options={{ tabBarLabel: 'Bookings' }}
     />
     <Tab.Screen 
       name="AdminSettings" 
@@ -187,40 +180,10 @@ const AdminTabs = () => (
 
 const MainTabs = () => (
   <Tab.Navigator
-    screenOptions={({ route }) => ({
+    tabBar={props => <CustomBottomTabBar {...props} />}
+    screenOptions={{
       headerShown: false,
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
-
-        if (route.name === 'Dashboard') {
-          iconName = focused ? 'home' : 'home-outline';
-        } else if (route.name === 'Properties') {
-          iconName = focused ? 'business' : 'business-outline';
-        } else if (route.name === 'Members') {
-          iconName = focused ? 'people' : 'people-outline';
-        } else if (route.name === 'Analytics') {
-          iconName = focused ? 'stats-chart' : 'stats-chart-outline';
-        } else if (route.name === 'Profile') {
-          iconName = focused ? 'person' : 'person-outline';
-        }
-
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: colors.gray400,
-      tabBarStyle: {
-        backgroundColor: colors.white,
-        borderTopColor: colors.gray200,
-        borderTopWidth: 1,
-        paddingTop: 5,
-        paddingBottom: 5,
-        height: 60,
-      },
-      tabBarLabelStyle: {
-        fontSize: 12,
-        fontWeight: '500',
-      },
-    })}
+    }}
   >
     <Tab.Screen 
       name="Dashboard" 

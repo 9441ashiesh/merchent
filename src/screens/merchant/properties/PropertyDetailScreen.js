@@ -6,9 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import colors, { typography, spacing, borderRadius } from '../../../constants/colors';
 import { mockProperties, mockRooms } from '../../../services/mockData';

@@ -106,70 +106,74 @@ const AdminPropertiesScreen = ({ navigation }) => {
 
   const pendingCount = mockProperties.filter(p => p.status === 'Pending').length;
 
-  const renderProperty = ({ item }) => (
-    <TouchableOpacity
-      style={styles.propertyCard}
-      onPress={() => navigation.navigate('PropertyDetailAdmin', { property: item })}
-    >
-      <Image 
-        source={{ uri: item.images[0] }} 
-        style={styles.propertyImage}
-        resizeMode="cover"
-      />
-      
-      {/* Status Badge */}
-      <View style={[styles.statusBadge, styles[`status${item.status}`]]}>
-        <Text style={styles.statusText}>{item.status}</Text>
-      </View>
-
-      <View style={styles.propertyInfo}>
-        <Text style={styles.propertyName}>{item.name}</Text>
-        <View style={styles.locationRow}>
-          <Ionicons name="location-outline" size={14} color={colors.gray600} />
-          <Text style={styles.location}>{item.location}</Text>
+  const renderProperty = ({ item }) => {
+    if (!item) return null;
+    
+    return (
+      <TouchableOpacity
+        style={styles.propertyCard}
+        onPress={() => navigation.navigate('PropertyDetailAdmin', { property: item })}
+      >
+        <Image 
+          source={{ uri: item.images?.[0] || 'https://via.placeholder.com/800x600/CCCCCC/FFFFFF?text=No+Image' }} 
+          style={styles.propertyImage}
+          resizeMode="cover"
+        />
+        
+        {/* Status Badge */}
+        <View style={[styles.statusBadge, styles[`status${item.status}`]]}>
+          <Text style={styles.statusText}>{item.status}</Text>
         </View>
 
-        <View style={styles.statsRow}>
-          <View style={styles.statItem}>
-            <Ionicons name="bed-outline" size={16} color={colors.gray600} />
-            <Text style={styles.statText}>{item.totalRooms} Rooms</Text>
+        <View style={styles.propertyInfo}>
+          <Text style={styles.propertyName}>{item.name}</Text>
+          <View style={styles.locationRow}>
+            <Ionicons name="location-outline" size={14} color={colors.gray600} />
+            <Text style={styles.location}>{item.location}</Text>
           </View>
-          <View style={styles.statItem}>
-            <Ionicons name="people-outline" size={16} color={colors.gray600} />
-            <Text style={styles.statText}>{item.totalBeds} Beds</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Ionicons name="star" size={16} color={colors.warning} />
-            <Text style={styles.statText}>{item.rating.toFixed(1)}</Text>
-          </View>
-        </View>
 
-        <View style={styles.merchantRow}>
-          <View style={styles.kycBadge}>
-            <Ionicons
-              name={item.kycVerified ? 'checkmark-circle' : 'time-outline'}
-              size={14}
-              color={item.kycVerified ? colors.success : colors.warning}
-            />
-            <Text style={styles.kycText}>
-              {item.kycVerified ? 'KYC Verified' : 'KYC Pending'}
-            </Text>
+          <View style={styles.statsRow}>
+            <View style={styles.statItem}>
+              <Ionicons name="bed-outline" size={16} color={colors.gray600} />
+              <Text style={styles.statText}>{item.totalRooms} Rooms</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Ionicons name="people-outline" size={16} color={colors.gray600} />
+              <Text style={styles.statText}>{item.totalBeds} Beds</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Ionicons name="star" size={16} color={colors.warning} />
+              <Text style={styles.statText}>{item.rating?.toFixed(1) || '0.0'}</Text>
+            </View>
           </View>
-          <Text style={styles.merchantName}>{item.merchantName}</Text>
-        </View>
 
-        {item.status === 'Pending' && (
-          <TouchableOpacity
-            style={styles.reviewButton}
-            onPress={() => navigation.navigate('PropertyApproval', { property: item })}
-          >
-            <Text style={styles.reviewButtonText}>Review & Approve</Text>
-            <Ionicons name="arrow-forward" size={16} color={colors.white} />
-          </TouchableOpacity>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
+          <View style={styles.merchantRow}>
+            <View style={styles.kycBadge}>
+              <Ionicons
+                name={item.kycVerified ? 'checkmark-circle' : 'time-outline'}
+                size={14}
+                color={item.kycVerified ? colors.success : colors.warning}
+              />
+              <Text style={styles.kycText}>
+                {item.kycVerified ? 'KYC Verified' : 'KYC Pending'}
+              </Text>
+            </View>
+            <Text style={styles.merchantName}>{item.merchantName}</Text>
+          </View>
+
+          {item.status === 'Pending' && (
+            <TouchableOpacity
+              style={styles.reviewButton}
+              onPress={() => navigation.navigate('PropertyApproval', { property: item })}
+            >
+              <Text style={styles.reviewButtonText}>Review & Approve</Text>
+              <Ionicons name="arrow-forward" size={16} color={colors.white} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -218,7 +222,7 @@ const AdminPropertiesScreen = ({ navigation }) => {
       <FlatList
         data={filteredProperties}
         renderItem={renderProperty}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={

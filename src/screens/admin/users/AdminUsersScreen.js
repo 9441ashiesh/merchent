@@ -111,8 +111,9 @@ const AdminUsersScreen = ({ navigation }) => {
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!user) return false;
+    const matchesSearch = (user.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                         (user.email?.toLowerCase() || '').includes(searchQuery.toLowerCase());
     const matchesTab = activeTab === 'all' || user.role === activeTab;
     return matchesSearch && matchesTab;
   });
@@ -133,69 +134,75 @@ const AdminUsersScreen = ({ navigation }) => {
     );
   };
 
-  const UserCard = ({ user }) => (
-    <View style={styles.userCard}>
-      <View style={styles.userHeader}>
-        <View style={styles.userInfo}>
-          <Image source={{ uri: user.avatar }} style={styles.avatar} />
-          <View style={styles.userDetails}>
-            <Text style={styles.userName}>{user.name}</Text>
-            <Text style={styles.userEmail}>{user.email}</Text>
-            <View style={styles.userMeta}>
-              <View style={[
-                styles.roleBadge,
-                { backgroundColor: user.role === 'merchant' ? colors.secondary : colors.primary }
-              ]}>
-                <Text style={styles.roleText}>{user.role.toUpperCase()}</Text>
-              </View>
-              <View style={[
-                styles.statusBadge,
-                { backgroundColor: user.status === 'active' ? colors.success : colors.error }
-              ]}>
-                <Text style={styles.statusText}>{user.status.toUpperCase()}</Text>
+  const UserCard = ({ user }) => {
+    if (!user) return null;
+    
+    return (
+      <View style={styles.userCard}>
+        <View style={styles.userHeader}>
+          <View style={styles.userInfo}>
+            <Image 
+              source={{ uri: user.avatar || 'https://i.pravatar.cc/150?img=1' }} 
+              style={styles.avatar} 
+            />
+            <View style={styles.userDetails}>
+              <Text style={styles.userName}>{user.name || 'Unknown User'}</Text>
+              <Text style={styles.userEmail}>{user.email || ''}</Text>
+              <View style={styles.userMeta}>
+                <View style={[
+                  styles.roleBadge,
+                  { backgroundColor: user.role === 'merchant' ? colors.secondary : colors.primary }
+                ]}>
+                  <Text style={styles.roleText}>{user.role?.toUpperCase() || 'USER'}</Text>
+                </View>
+                <View style={[
+                  styles.statusBadge,
+                  { backgroundColor: user.status === 'active' ? colors.success : colors.error }
+                ]}>
+                  <Text style={styles.statusText}>{user.status?.toUpperCase() || 'UNKNOWN'}</Text>
+                </View>
               </View>
             </View>
           </View>
+          <TouchableOpacity style={styles.moreButton}>
+            <Ionicons name="ellipsis-vertical" size={20} color={colors.gray400} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.moreButton}>
-          <Ionicons name="ellipsis-vertical" size={20} color={colors.gray400} />
-        </TouchableOpacity>
-      </View>
-      
-      <View style={styles.userStats}>
-        {user.role === 'merchant' ? (
-          <>
-            <View style={styles.statItemMerchant}>
-              <Ionicons name="business-outline" size={14} color={colors.primary} />
-              <View>
-                <Text style={styles.statLabel}>Business</Text>
-                <Text style={styles.statValue}>{user.businessName}</Text>
+        
+        <View style={styles.userStats}>
+          {user.role === 'merchant' ? (
+            <>
+              <View style={styles.statItemMerchant}>
+                <Ionicons name="business-outline" size={14} color={colors.primary} />
+                <View>
+                  <Text style={styles.statLabel}>Business</Text>
+                  <Text style={styles.statValue}>{user.businessName || 'N/A'}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.statItemMerchant}>
-              <Ionicons name="home-outline" size={14} color={colors.success} />
-              <View>
-                <Text style={styles.statLabel}>Properties</Text>
-                <Text style={styles.statValue}>{user.propertyCount}</Text>
+              <View style={styles.statItemMerchant}>
+                <Ionicons name="home-outline" size={14} color={colors.success} />
+                <View>
+                  <Text style={styles.statLabel}>Properties</Text>
+                  <Text style={styles.statValue}>{user.propertyCount || 0}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.statItemMerchant}>
-              <Ionicons name="cash-outline" size={14} color={colors.warning} />
-              <View>
-                <Text style={styles.statLabel}>Revenue</Text>
-                <Text style={styles.statValue}>{user.totalRevenue}</Text>
+              <View style={styles.statItemMerchant}>
+                <Ionicons name="cash-outline" size={14} color={colors.warning} />
+                <View>
+                  <Text style={styles.statLabel}>Revenue</Text>
+                  <Text style={styles.statValue}>{user.totalRevenue || '$0'}</Text>
+                </View>
               </View>
-            </View>
-          </>
-        ) : (
+            </>
+          ) : (
           <>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>Joined</Text>
-              <Text style={styles.statValue}>{user.joinDate}</Text>
+              <Text style={styles.statValue}>{user.joinDate || 'N/A'}</Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>Last Active</Text>
-              <Text style={styles.statValue}>{user.lastActive}</Text>
+              <Text style={styles.statValue}>{user.lastActive || 'N/A'}</Text>
             </View>
           </>
         )}
@@ -212,12 +219,12 @@ const AdminUsersScreen = ({ navigation }) => {
             <Text style={[styles.kycStatusText, {
               color: user.kycStatus === 'Approved' ? colors.success : user.kycStatus === 'Pending' ? colors.warning : colors.error
             }]}>
-              KYC: {user.kycStatus}
+              KYC: {user.kycStatus || 'Unknown'}
             </Text>
           </View>
           <View style={styles.cityBadge}>
             <Ionicons name="location" size={12} color={colors.textSecondary} />
-            <Text style={styles.cityText}>{user.city}</Text>
+            <Text style={styles.cityText}>{user.city || 'Unknown'}</Text>
           </View>
         </View>
       )}
@@ -257,7 +264,8 @@ const AdminUsersScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -325,8 +333,8 @@ const AdminUsersScreen = ({ navigation }) => {
         style={styles.usersList}
         showsVerticalScrollIndicator={false}
       >
-        {filteredUsers.map(user => (
-          <UserCard key={user.id} user={user} />
+        {filteredUsers.map((user, index) => (
+          <UserCard key={user?.id || index} user={user} />
         ))}
         
         {filteredUsers.length === 0 && (

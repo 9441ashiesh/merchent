@@ -226,16 +226,19 @@ This document tracks our progress against industry-standard features that hostel
 
 #### 2. Reservation Management System
 **Research Finding**: Core functionality for bookings
+**Status**: DEPRIORITIZED (Removed from current navigation)
 **What's Needed**:
-- [ ] Booking calendar
-- [ ] New booking form
-- [ ] Booking confirmation system
-- [ ] Check-in/Check-out dates
-- [ ] Booking status tracking
-- [ ] Cancellation management
-- [ ] Double-booking prevention
+- [ ] Booking calendar (FUTURE - if needed)
+- [ ] New booking form (FUTURE)
+- [ ] Booking confirmation system (FUTURE)
+- [ ] Check-in/Check-out dates (FUTURE)
+- [ ] Booking status tracking (FUTURE)
+- [ ] Cancellation management (FUTURE)
+- [ ] Double-booking prevention (FUTURE)
 
-**Impact**: HIGH - Required for operations
+**Note**: Bookings tab has been removed from navigation. Current focus is on direct room assignment via Members management.
+
+**Impact**: MEDIUM - Can be added later if needed
 
 ---
 
@@ -256,31 +259,44 @@ This document tracks our progress against industry-standard features that hostel
 
 #### 4. Add Property/Room/Member Forms
 **Research Finding**: Basic CRUD operations needed
-**What's Needed**:
-- [ ] Add new property form
-- [ ] Add new room form
-- [ ] Add new member form
-- [ ] Edit property details
-- [ ] Edit room details
-- [ ] Edit member details
-- [ ] Delete operations
-- [ ] Image upload
+**Status**: ✅ ADD FORMS COMPLETED
+**What's Completed**:
+- [x] Add new property form (with type selector, amenities, image picker)
+- [x] Add new room form (with property selector, room type, revenue projection)
+- [x] Add new member form (with optional room assignment toggle)
+- [x] Members list screen (with search, filter, FAB button)
+- [ ] Edit property details (NEXT PHASE)
+- [ ] Edit room details (NEXT PHASE)
+- [ ] Edit member details (NEXT PHASE)
+- [ ] Delete operations (NEXT PHASE)
+- [ ] Image upload with expo-image-picker (NEXT PHASE)
 
-**Impact**: HIGH - Core functionality
+**Impact**: HIGH - Core functionality NOW AVAILABLE
+**Files Created**:
+- `src/screens/properties/AddPropertyScreen.js` ✅
+- `src/screens/rooms/AddRoomScreen.js` ✅
+- `src/screens/members/AddMemberScreen.js` ✅
+- `src/screens/members/MembersScreen.js` ✅
 
 ---
 
 #### 5. Search and Filter System
 **Research Finding**: Essential for usability
-**What's Needed**:
-- [ ] Search properties by name/location
-- [ ] Filter rooms by type/status
-- [ ] Filter members by payment status
-- [ ] Sort by occupancy/revenue
-- [ ] Advanced filters
-- [ ] Search history
+**Status**: ✅ COMPLETED FOR PROPERTIES & MEMBERS
+**What's Completed**:
+- [x] Search members by name/phone (MembersScreen) ✅
+- [x] Filter members by assignment status (All/Assigned/Unassigned) ✅
+- [x] Search properties by name/location ✅
+- [x] Filter properties by type (Male/Female/Mixed) ✅
+- [x] Sort properties by name/occupancy/revenue ✅
+- [ ] Filter rooms by type/status (FUTURE)
+- [ ] Advanced filters (FUTURE)
+- [ ] Search history (FUTURE)
 
-**Impact**: MEDIUM - Usability enhancement
+**Impact**: MEDIUM - Usability enhancement NOW AVAILABLE
+**Files**:
+- `src/screens/members/MembersScreen.js` ✅ (Search & Filter implemented)
+- `src/screens/properties/PropertiesScreen.js` ✅ (Search, Filter & Sort implemented)
 
 ---
 

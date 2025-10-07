@@ -198,8 +198,6 @@ const MainTabs = () => (
           iconName = focused ? 'business' : 'business-outline';
         } else if (route.name === 'Members') {
           iconName = focused ? 'people' : 'people-outline';
-        } else if (route.name === 'Bookings') {
-          iconName = focused ? 'calendar' : 'calendar-outline';
         } else if (route.name === 'Analytics') {
           iconName = focused ? 'stats-chart' : 'stats-chart-outline';
         } else if (route.name === 'Profile') {
@@ -238,11 +236,6 @@ const MainTabs = () => (
       name="Members" 
       component={MembersStack}
       options={{ tabBarLabel: 'Members' }}
-    />
-    <Tab.Screen 
-      name="Bookings" 
-      component={BookingsStack}
-      options={{ tabBarLabel: 'Bookings' }}
     />
     <Tab.Screen 
       name="Analytics" 

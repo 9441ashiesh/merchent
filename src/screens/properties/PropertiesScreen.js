@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   Alert,
+  TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +16,9 @@ import { mockProperties } from '../../services/mockData';
 
 const PropertiesScreen = ({ navigation }) => {
   const [properties, setProperties] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('all'); // all, male, female, mixed
+  const [sortBy, setSortBy] = useState('name'); // name, occupancy, revenue
 
   useEffect(() => {
     loadProperties();
@@ -23,6 +27,40 @@ const PropertiesScreen = ({ navigation }) => {
   const loadProperties = () => {
     setProperties(mockProperties);
   };
+
+  // Filter and sort properties
+  const getFilteredAndSortedProperties = () => {
+    let filtered = properties.filter(property => {
+      const matchesSearch = property.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           property.location.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesType = 
+        filterType === 'all' ? true :
+        filterType === 'male' ? property.type === 'Male' :
+        filterType === 'female' ? property.type === 'Female' :
+        filterType === 'mixed' ? property.type === 'Mixed' : true;
+      
+      return matchesSearch && matchesType;
+    });
+
+    // Sort
+    filtered.sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      } else if (sortBy === 'occupancy') {
+        const aOccupancy = (a.occupiedRooms / a.totalRooms) * 100;
+        const bOccupancy = (b.occupiedRooms / b.totalRooms) * 100;
+        return bOccupancy - aOccupancy; // Descending
+      } else if (sortBy === 'revenue') {
+        return b.monthlyRevenue - a.monthlyRevenue; // Descending
+      }
+      return 0;
+    });
+
+    return filtered;
+  };
+
+  const filteredProperties = getFilteredAndSortedProperties();
 
   const PropertyCard = ({ property }) => (
     <TouchableOpacity 
@@ -98,28 +136,111 @@ const PropertiesScreen = ({ navigation }) => {
         </View>
       </View>
 
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <View style={styles.searchBar}>
+          <Ionicons name="search" size={20} color={colors.secondary} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search properties by name or location..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor={colors.tertiary}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={20} color={colors.secondary} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
+      {/* Filter and Sort */}
+      <View style={styles.filterSortContainer}>
+        {/* Filter Tabs */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterTabs}>
+          <TouchableOpacity
+            style={[styles.filterChip, filterType === 'all' && styles.filterChipActive]}
+            onPress={() => setFilterType('all')}
+          >
+            <Text style={[styles.filterChipText, filterType === 'all' && styles.filterChipTextActive]}>
+              All ({properties.length})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterChip, filterType === 'male' && styles.filterChipActive]}
+            onPress={() => setFilterType('male')}
+          >
+            <Text style={[styles.filterChipText, filterType === 'male' && styles.filterChipTextActive]}>
+              Male ({properties.filter(p => p.type === 'Male').length})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterChip, filterType === 'female' && styles.filterChipActive]}
+            onPress={() => setFilterType('female')}
+          >
+            <Text style={[styles.filterChipText, filterType === 'female' && styles.filterChipTextActive]}>
+              Female ({properties.filter(p => p.type === 'Female').length})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterChip, filterType === 'mixed' && styles.filterChipActive]}
+            onPress={() => setFilterType('mixed')}
+          >
+            <Text style={[styles.filterChipText, filterType === 'mixed' && styles.filterChipTextActive]}>
+              Mixed ({properties.filter(p => p.type === 'Mixed').length})
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+        {/* Sort Dropdown */}
+        <View style={styles.sortContainer}>
+          <Text style={styles.sortLabel}>Sort:</Text>
+          <TouchableOpacity
+            style={styles.sortButton}
+            onPress={() => {
+              const options = ['name', 'occupancy', 'revenue'];
+              const currentIndex = options.indexOf(sortBy);
+              const nextIndex = (currentIndex + 1) % options.length;
+              setSortBy(options[nextIndex]);
+            }}
+          >
+            <Text style={styles.sortButtonText}>
+              {sortBy === 'name' ? 'Name' : sortBy === 'occupancy' ? 'Occupancy' : 'Revenue'}
+            </Text>
+            <Ionicons name="swap-vertical" size={16} color={colors.primary} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {/* Properties List */}
       <ScrollView 
         style={styles.propertiesList}
         showsVerticalScrollIndicator={false}
       >
-        {properties.map(property => (
+        {filteredProperties.map(property => (
           <PropertyCard key={property.id} property={property} />
         ))}
         
-        {properties.length === 0 && (
+        {filteredProperties.length === 0 && (
           <View style={styles.emptyState}>
             <Ionicons name="business-outline" size={64} color={colors.gray300} />
-            <Text style={styles.emptyTitle}>No Properties Yet</Text>
-            <Text style={styles.emptySubtitle}>
-              Add your first property to start managing bookings
+            <Text style={styles.emptyTitle}>
+              {searchQuery ? 'No Properties Found' : 'No Properties Yet'}
             </Text>
-            <TouchableOpacity 
-              style={styles.emptyButton}
-              onPress={() => navigation.navigate('AddProperty')}
-            >
-              <Text style={styles.emptyButtonText}>Add Property</Text>
-            </TouchableOpacity>
+            <Text style={styles.emptySubtitle}>
+              {searchQuery 
+                ? 'Try a different search term' 
+                : 'Add your first property to start managing bookings'}
+            </Text>
+            {!searchQuery && (
+              <TouchableOpacity 
+                style={styles.emptyButton}
+                onPress={() => navigation.navigate('AddProperty')}
+              >
+                <Text style={styles.emptyButtonText}>Add Property</Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </ScrollView>
@@ -154,6 +275,80 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  searchContainer: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightBackground,
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.lightBackground,
+    borderRadius: borderRadius.medium,
+    paddingHorizontal: spacing.md,
+    gap: spacing.sm,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: spacing.md,
+    ...typography.bodyMedium,
+    color: colors.textPrimary,
+  },
+  filterSortContainer: {
+    backgroundColor: colors.white,
+    paddingVertical: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightBackground,
+  },
+  filterTabs: {
+    paddingHorizontal: spacing.lg,
+  },
+  filterChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.large,
+    backgroundColor: colors.lightBackground,
+    marginRight: spacing.sm,
+  },
+  filterChipActive: {
+    backgroundColor: colors.primary,
+  },
+  filterChipText: {
+    ...typography.caption,
+    color: colors.secondary,
+    fontWeight: '600',
+  },
+  filterChipTextActive: {
+    color: colors.white,
+  },
+  sortContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    gap: spacing.sm,
+  },
+  sortLabel: {
+    ...typography.caption,
+    color: colors.secondary,
+  },
+  sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.lightBackground,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.medium,
+    gap: spacing.xs,
+  },
+  sortButtonText: {
+    ...typography.caption,
+    color: colors.primary,
+    fontWeight: '600',
   },
   summaryContainer: {
     flexDirection: 'row',

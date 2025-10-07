@@ -23,7 +23,10 @@ import PropertiesScreen from '../screens/properties/PropertiesScreen';
 import PropertyDetailScreen from '../screens/properties/PropertyDetailScreen';
 import AddPropertyScreen from '../screens/properties/AddPropertyScreen';
 import RoomDetailScreen from '../screens/rooms/RoomDetailScreen';
+import AddRoomScreen from '../screens/rooms/AddRoomScreen';
 import StudentProfileScreen from '../screens/members/StudentProfileScreen';
+import AddMemberScreen from '../screens/members/AddMemberScreen';
+import MembersScreen from '../screens/members/MembersScreen';
 import BookingsScreen from '../screens/bookings/BookingsScreen';
 import BookingDetailScreen from '../screens/bookings/BookingDetailScreen';
 import AnalyticsScreen from '../screens/analytics/AnalyticsScreen';
@@ -67,6 +70,20 @@ const PropertiesStack = () => (
     <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
     <Stack.Screen name="StudentProfile" component={StudentProfileScreen} />
     <Stack.Screen name="AddProperty" component={AddPropertyScreen} />
+    <Stack.Screen name="AddRoom" component={AddRoomScreen} />
+    <Stack.Screen name="AddMember" component={AddMemberScreen} />
+  </Stack.Navigator>
+);
+
+const MembersStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="MembersList" component={MembersScreen} />
+    <Stack.Screen name="StudentProfile" component={StudentProfileScreen} />
+    <Stack.Screen name="AddMember" component={AddMemberScreen} />
   </Stack.Navigator>
 );
 
@@ -179,6 +196,8 @@ const MainTabs = () => (
           iconName = focused ? 'home' : 'home-outline';
         } else if (route.name === 'Properties') {
           iconName = focused ? 'business' : 'business-outline';
+        } else if (route.name === 'Members') {
+          iconName = focused ? 'people' : 'people-outline';
         } else if (route.name === 'Bookings') {
           iconName = focused ? 'calendar' : 'calendar-outline';
         } else if (route.name === 'Analytics') {
@@ -214,6 +233,11 @@ const MainTabs = () => (
       name="Properties" 
       component={PropertiesStack}
       options={{ tabBarLabel: 'Properties' }}
+    />
+    <Tab.Screen 
+      name="Members" 
+      component={MembersStack}
+      options={{ tabBarLabel: 'Members' }}
     />
     <Tab.Screen 
       name="Bookings" 

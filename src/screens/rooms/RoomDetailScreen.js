@@ -100,7 +100,10 @@ export default function RoomDetailScreen({ route, navigation }) {
               Members ({roomStudents.length}/{room.beds})
             </Text>
             {room.occupied < room.beds && (
-              <TouchableOpacity style={styles.addButton}>
+              <TouchableOpacity 
+                style={styles.addButton}
+                onPress={() => navigation.navigate('AddMember', { room, property })}
+              >
                 <Ionicons name="person-add" size={18} color={colors.white} />
                 <Text style={styles.addButtonText}>Add Member</Text>
               </TouchableOpacity>
